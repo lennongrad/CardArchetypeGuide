@@ -1,1 +1,5 @@
-<p>archetype works!</p>
+<p>{{archetype.name}}</p>
+
+<span *ngFor="let example of archetype.examples">
+    <img *ngIf="getCardData(example) != undefined" src="{{getCardImage(example)}}">
+</span>

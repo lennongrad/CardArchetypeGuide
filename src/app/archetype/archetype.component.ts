@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
-import { CardDataService } from '../card-data.service';
-import { GoogleSheetsDbService } from 'ng-google-sheets-db/lib/google-sheets-db.service';
+import { Component, OnInit, Input } from '@angular/core';
+import { Archetype, CardData, CardDataService } from '../card-data.service';
 
 @Component({
   selector: 'app-archetype',
@@ -9,11 +7,22 @@ import { GoogleSheetsDbService } from 'ng-google-sheets-db/lib/google-sheets-db.
   styleUrls: ['./archetype.component.less']
 })
 export class ArchetypeComponent implements OnInit {
+  @Input() archetype!: Archetype;
 
-  constructor(private http:HttpClient, private cardDataService:CardDataService) { }
+  getCardData(cardName: string): CardData | undefined{
+    return this.cardDataService.getCardData(cardName)
+  }
+
+  getCardImage(cardName: string): string{
+    if(this.getCardData(cardName) != undefined){
+      return this.getCardData(cardName)!.imageURL
+    }
+    return "";
+  }
+
+  constructor(private cardDataService:CardDataService) { }
 
   ngOnInit(): void {
-    this.cardDataService.preloadCards(["Bound in Gold", "Divine Gambit"])
   }
 
 }

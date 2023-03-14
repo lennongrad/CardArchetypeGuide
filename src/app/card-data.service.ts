@@ -6,9 +6,30 @@ import { GoogleSheetsDbService } from 'ng-google-sheets-db';
   providedIn: 'root'
 })
 export class CardDataService {
+  spreadsheetURL = "140XCKstje9kwCZ3k5k1mt4cHNT8NapT3MIBeX89mHbM";
+
+  public cardArchetypes : Array<Archetype> = [];
+
   processedCardData: Map<string, CardData> = new Map<string, CardData>();
   failedCards: Array<string> = [];
-  spreadsheetURL = "140XCKstje9kwCZ3k5k1mt4cHNT8NapT3MIBeX89mHbM";
+
+  attemptLoadArchetypes(): void{
+    this.googleSheetsDbService.get<ArchetypeData>(this.spreadsheetURL, "Sheet1", attributesMapping).subscribe(data => {
+      var referencedCardNames = new Set<string>();
+
+      data.forEach((archetypeData: ArchetypeData) => {
+        var exampleNames = archetypeData.examples.split(", ")
+        exampleNames.forEach(name => referencedCardNames.add(name))
+
+        this.cardArchetypes.push({
+          name: archetypeData.name,
+          examples: exampleNames
+        })
+      })
+
+      this.preloadCards(Array.from(referencedCardNames));
+    })
+  }
 
   preloadCards(cardNames: Array<string>): void{
     // can only handle 75 at once but dont want to implement splitting up right now
@@ -31,11 +52,21 @@ export class CardDataService {
         console.error("Failed cards:", this.failedCards)
       }
     })
+  }
 
-    this.googleSheetsDbService.get<ArchetypeData>(this.spreadsheetURL, "Sheet1", attributesMapping).subscribe(data => console.log(data))
+  getCardData(cardName: string): CardData | undefined{
+    if(this.processedCardData.has(cardName)){
+      return this.processedCardData.get(cardName);
+    }
+    return undefined;
   }
 
   constructor(private http:HttpClient, private googleSheetsDbService: GoogleSheetsDbService) { }
+}
+
+export interface Archetype{
+  name: string,
+  examples: Array<string>
 }
 
 interface ArchetypeData{
@@ -45,7 +76,7 @@ interface ArchetypeData{
 
 const attributesMapping = {
   name: "Archetype",
-  example: "Examples"
+  examples: "Examples"
 }
 
 interface ScryfallReturnCollection{

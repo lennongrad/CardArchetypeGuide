@@ -1,5 +1,11 @@
-<p>{{archetype.name}}</p>
+<div id="archetype-block">
+    <div id="archetype-name">{{_archetype.name}}</div>
+    <div id="archetype-description">{{_archetype.description}} {{_archetype.analysis}}</div>
+    <div id="archetype-examples">
+        <span *ngFor="let example of exampleCards">
+            <img *ngIf="example != undefined" src="{{example.imageURL}}">
+        </span>   
+    </div>
+</div>
 
-<span *ngFor="let example of archetype.examples">
-    <img *ngIf="getCardData(example) != undefined" src="{{getCardImage(example)}}">
-</span>
+

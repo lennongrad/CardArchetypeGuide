@@ -1,3 +1,5 @@
-<app-archetype *ngFor="let archetype of getArchetypes()" [archetype]="archetype"></app-archetype>
+<div id="archetype-holder">
+    <app-archetype *ngFor="let archetype of getArchetypes()" [archetype]="archetype"></app-archetype>
+</div>
 
 <router-outlet></router-outlet>

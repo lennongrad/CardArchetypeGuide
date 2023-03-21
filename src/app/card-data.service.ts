@@ -56,13 +56,13 @@ export class CardDataService {
       this.http.post<ScryfallReturnCollection>(url, {"identifiers": cardNameArray}).subscribe((result:ScryfallReturnCollection) => {
         result.data.forEach((card: ScryfallReturnCard) => {
           if(card.image_uris != undefined){
-            this.processedCardData.set(card.name, {imageURL: card.image_uris.normal})
+            this.processedCardData.set(card.name, {imageURL: card.image_uris.normal, color_identity: card.color_identity})
           }
         })
 
         this.waitingResponses -= 1;
         if(this.waitingResponses == 0){
-          this.cardArchetypes = preloadedCardArchetypes
+          this.cardArchetypes = this.shuffle(preloadedCardArchetypes)
           
           cardNames.forEach(name => {
             if(!this.processedCardData.has(name)){
@@ -77,6 +77,24 @@ export class CardDataService {
       })
     }
   }
+  
+  shuffle<T>(array: T[]): T[] {
+    let currentIndex = array.length,  randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
+};
 
   getCardData(cardName: string): CardData | undefined{
     if(this.processedCardData.has(cardName)){
@@ -115,7 +133,8 @@ interface ScryfallReturnCollection{
 
 interface ScryfallReturnCard{
   name: string,
-  image_uris: ScryfallImageList
+  image_uris: ScryfallImageList,
+  color_identity: Array<string>
 }
 
 interface ScryfallImageList{
@@ -126,5 +145,6 @@ interface ScryfallImageList{
 }
 
 export interface CardData{
-  imageURL: string
+  imageURL: string,
+  color_identity: Array<string>
 }

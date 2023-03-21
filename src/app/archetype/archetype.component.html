@@ -1,6 +1,6 @@
-<div id="archetype-block">
+<div id="archetype-block" [style]="{'background-color': color}" [class.isDark]="isDark">
     <div id="archetype-name">{{_archetype.name}}</div>
-    <div id="archetype-description">{{_archetype.description}} {{_archetype.analysis}}</div>
+    <div id="archetype-description">{{_archetype.description}}</div>
     <div id="archetype-examples">
         <span *ngFor="let example of exampleCards">
             <img *ngIf="example != undefined" src="{{example.imageURL}}">

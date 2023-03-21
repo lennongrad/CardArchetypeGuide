@@ -1,6 +1,9 @@
 #archetype-block{
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 10px;
+
+    &.isDark{
+        color: white;
+    }
 }
 
 #archetype-name{
@@ -12,12 +15,19 @@
 
 #archetype-description{
     font-family: 'Arial';
+    height: 40px;
     margin-bottom: 10px;
     margin-left: 4px;
-    max-width: 500px;
+    max-width: 550px;
 }
 
 #archetype-examples{
+    height: 280px;
+    overflow-x: overlay;
+    overflow-y: hidden;
+    white-space: nowrap;
+    padding: 20px;
+
     span{
         margin-right: -60px;
         position: relative;
@@ -29,11 +39,14 @@
     
     img{
         width: 200px;
+        height: 280px;
         border-radius: 9px;
         box-sizing: border-box;
+        transition: .1s;
 
         &:hover{
             border: 1px solid rgb(41, 99, 192);
+            transform: scale(1.1);
         }
     }
 }
